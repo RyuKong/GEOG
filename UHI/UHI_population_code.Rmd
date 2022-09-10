@@ -1,0 +1,579 @@
+---
+date:   <font size=4> <center> <h1> 5 August 2021 </h1> </center> </font>
+title:  <center> <h1> Final Project Report </h1> </center>
+author: <center> <h1> Jie Kong </h1> </center>
+output: html_document
+theme: cerulean
+---
+
+<style type="text/css">
+body{ /* Normal  */
+      font-size: 12px;
+  }
+td {  /* Table  */
+  font-size: 8px;
+}
+h1 { /* Header 1 */
+  font-size: 22px;
+  color: DarkBlue;
+}
+h2 { /* Header 2 */
+    font-size: 22px;
+  color: DarkBlue;
+}
+h3 { /* Header 3 */
+    font-size: 22px;
+  color: DarkBlue;
+}
+h4 { /* Header 3 */
+    font-size: 22px;
+  color: DarkBlue;
+}
+h5 { /* Header 3 */
+    font-size: 22px;
+  color: DarkBlue;
+}
+h6 { /* Header 3 */
+    font-size: 22px;
+  color: DarkBlue;
+}
+</style>
+
+```{r message=FALSE, echo=FALSE}
+library(sp)
+library(ape)
+library(maps)
+library(dplyr)
+library(psych)
+library(ggalt)
+library(rgdal)
+library(raster)
+library(plotly)
+library(mosaic)
+library(mapdata)
+library(mapproj)
+library(leaflet)
+library(plotrix)
+library(ggplot2)
+library(spatstat)
+library(maptools)
+library(gganimate)
+library(gapminder)
+library(lubridate)
+library(ggspatial)
+rm(list = ls())
+```
+
+```{r message=FALSE, echo=FALSE}
+rm(list = ls())
+```
+
+# Abstract
+
+\ \ \ \ Human beings have long discovered that the atmospheric or environmental characteristics are different between regions. In 1820, Lake Howard, an English meteorologist, first recorded the phenomenon that the temperature in the central urban of London was higher than in the suburbs. In 1958, Manley first proposed the effect of Urban Heat Island. UHI). Now, it is generally believed that UHI refers to a phenomenon where the temperature of the developing or developed regions is significantly higher than that of their suburbs due to a variety of factors. 
+  
+\ \ \ \ The Urban Heat Island is a critical climate phenomenon. With the context of global warming and rapid development/urbanization, the UHI has received more and more attention and research since the century. Previous studies have shown that urbanization and associated expanding scale has a significant impact on the UHI and regional urban climate. However, it is not clear whether the growing flow of population has an intuitive impact on the urban climate or the extent of UHI. Some researchers have theorized that the factors of population density, built-up density, and vegetation fractions should have directly or indirectly contribute to the formation of UHI. As the increase in urban population and density of urban population would inevitably be closely related to the massive increases in buildings, roads, and traffic in the city, with more heat emissions from transportation and vehicles, more releases of residential consumption/waste heat, leading to the comprehensive impact on urban greening and natural/ecological environment. 
+  
+\ \ \ \ The research report discusses the context of Urban Heat Island and introduces the method of using climate data-set from 1900 to 2017 with collaboration of population growth data-set to explore the relationship between the Urban Heat Island (UHI) and urban population growth in highly-dense cities around the world, by choosing mega-cities from different continents with rapid development of population during the period from 1950 to 2017. The report also discusses and elaborates the obtained intuitive results of that the temperature increases with the increase of the population, and its relationship with the population can be reflected by high correlation coefficients. It is also proposed that the UHI has a weaker relationship with regional natural/environmental variability, by the use of precipitation data-set and compare between the principal component trend of the temperature change and the natural precipitation change.
+
+# Introduction
+
+\ \ \ \ The research was based on the ideas that with development of the urban population, the thriving urban scale, number of vehicles, industrial productions, and residents’ modern lifestyles have unavoidably discharged enormous heat. Combined with more and more asphalt and concrete artifacts, roads and buildings, and with the decrease of urban greening and water areas, which surges the urban temperature through years and makes the urban has higher surface or air temperature than the outer suburbs. The UHI always negatively impacts the environment of cities, deteriorates the conditions of human’s living, and even causes deaths. 
+  
+\ \ \ \ My research project mainly focuses on exploring the relationship between the severity of Urban Heatls land (UHI) and urban population growth in highly-dense cities around the world, and to obtain an intuitive relationship between them by comparing which with their suburbs while considering the effects of global warming.In addition, the research on relationship between UHI and urban population growth could be interpreted with other variables, such as regional precipitation, global warming and density of population, etc., to conduct analysis from different perspectives. And I have chosen several papers on to study as literature review.
+
+\ \ \ \ The first scientific paper I want to discuss and summarize is named Magnitude of urban heat islands largely explained by climate and population. Manoli et al. published this paper on Nature in 2019 and mainly discussed the two questions: what is the relationship between urban and suburban surface temperature, population, structure and climate?How do they affect the trend of Urban Heat Island? The paper tried to answer the two questions above by analyzing the differences of surface temperature in urban and suburban areas over the summer and found that the temperature increases non-linearly with precipitation and obviously scales with the size of urban area. And the author introduced a model that links population, precipitation, and the intensity of regional UHI, the model explains that the overall evapo-transpiration and convection efficiency between urban and suburban areas are also the determinants of urban warming. In short, that regional precipitation could greatly influence the severity of regional UHI.Although using regional precipitation data-sets combined with the surface temperature data-sets to find their potential effects on regional temperature and the relationship between severity of UHI and growth of regional temperature was not the original goal of my research project. After reading the paper, I realized that using the precipitation data-sets from 1900-2017 (which comes with the surface temperature data-sets under the same time-scale) together with the temperature data-sets is a good direction for analyzing the relationships of UHI, temperature, precipitation, and growth of population while looking into the correlation of regional temperature and precipitation. 
+
+\ \ \ \ The second paper I like to review on is named Effects of Uirban Surfaces and White Roofs on Global and Regional Climate, written by Mark Jacobson and John Ten Hoeve from Stanford University.They used the climate change models ranging from 2005 to 2025 (predicted), and stated that UHI had huge impacts on global warming. And they argued that urban areas contribute more to global warming than greenhouse gases produced by human activities and also pointed out that curbing the UHI is critical to slow the global warming. The study and their ideas made me realize that UHIs could influence the global warming, then conversely, the global warming could also influence the UHI. In order to find the accurate relationship between the severity of UHI and urban growth of population, I also realized that the effects of global warming cannot be ignored. To reduce the effects of temperature growthglobal warming. I simply calculated the average temperature growth from 1900 to 2017, and then subtract which from the regional temperature data-sets.
+
+\ \ \ \ The third resource I like to discuss and summarize is another paper, named The impacting mechanism and laws of function of urban heat islands effeect: A case study of Shanghai. And the paper stated that industrialization, real estate development and population growth have great effects on the intensity of UHI in Shanghai. In terms of the specific effects of cconomic development and energy consumption on the intensity of urban heat island, the density of population has greater effect on UHI than the scale of city. 
+  
+\ \ \ \ In addition to the three, another paper I found was The role of city size and urban form in the surface urban heat island. The paper states that there are "other factors, such as population density, built-up density, and veqetation fractions can also directly or indirectly contribute to the formation of UHI." I think whichsupports my research questions above becauset the urban population is the basis of the scale of the city. The increase in population will inevitably be closely related to the massive increase in buildings, roads, and traffic in the city. Urban population density, heat emission from factories and vehicles, the release of residential energy consumption, and the comprehensive impact of urban building structures are the main reasons for this. There it should be neccessary to find out the relationship between population growth and temperature growth of urban areas. 
+
+# Data Description
+
+\ \ \ \ The data used for the research were a global climate (temperature and precipitation) data-set created by researchers, Cort Willmott and Kenji Matsuura at University of Delaware.The data contains spatial elements of geographic coordinates (longitudes and latitudes). Which was used on the research for quickly connecting the regions/cities chosen to study on. The data-set contains global data of terrestrial temperature and precipitation ranging from 1900 to 2017, and was collected and organized based primarily on observation-station records that were compiled from publicly available sources. Another used data is the population growth data-set from the World Population Prospects and Projections, originally from the United Nations. In addition, a data-set containing the coordinates for major cities of the world has been collected from the World Cities Database. All data above has been used on the research and they are reliable and convincing.
+
+
+```{r message = FALSE, echo=FALSE}
+airtemp <- "Climatology/temperature/air_temp."
+precipi <- "Climatology/precipitation/precip."
+directory  <- "C:/Users/kongj/Documents/GEOG 3023/Datasets/"
+newheaders <- c("Longtitude", "Latitude", 
+                "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+worldcities  <- read.csv(paste0(directory, "worldcities.csv"), header=TRUE)
+```
+
+```{r message = FALSE, echo=FALSE}
+for (year in 1900:2017) {# Creating the CSV for global mean temperature annually
+  temp = read.table(paste0(directory, airtemp, year))
+
+  colnames(temp) <- newheaders  
+  dataset <- data.frame(Year = c(year),
+                        Jan  = c(median(temp$Jan)),
+                        Feb  = c(median(temp$Feb)),
+                        Mar  = c(median(temp$Mar)),
+                        Apr  = c(median(temp$Apr)),
+                        May  = c(median(temp$May)),
+                        Jun  = c(median(temp$Jun)),
+                        Jul  = c(median(temp$Jul)),
+                        Aug  = c(median(temp$Aug)),
+                        Sep  = c(median(temp$Sep)),
+                        Oct  = c(median(temp$Oct)),
+                        Nov  = c(median(temp$Nov)),
+                        Dec  = c(median(temp$Dec)))
+  
+  write.table(dataset, paste0(directory, "Global-Temperature-1900-2017.csv"), 
+              col.names=FALSE, row.names=TRUE, append=TRUE)
+}
+```
+
+```{r message = FALSE, echo=FALSE}
+for (year in 1900:2017) {# Creating the CSV for global mean precipitation annually
+  precip = read.table(paste0(directory, precipi, year))
+  
+  colnames(precip) <- newheaders  
+  dataset <- data.frame(Year = c(year),
+                        Jan  = c(median(precip$Jan)),
+                        Feb  = c(median(precip$Feb)),
+                        Mar  = c(median(precip$Mar)),
+                        Apr  = c(median(precip$Apr)),
+                        May  = c(median(precip$May)),
+                        Jun  = c(median(precip$Jun)),
+                        Jul  = c(median(precip$Jul)),
+                        Aug  = c(median(precip$Aug)),
+                        Sep  = c(median(precip$Sep)),
+                        Oct  = c(median(precip$Oct)),
+                        Nov  = c(median(precip$Nov)),
+                        Dec  = c(median(precip$Dec)))
+  
+  write.table(dataset, paste0(directory, "Global-Precipitation-1900-2017.csv"), 
+              col.names=FALSE, row.names=TRUE, append=TRUE)
+}
+```
+
+```{r message = FALSE, echo=FALSE}
+temp <- read.table(paste0(directory, "Global-Temperature-1900-2017.csv"))
+prec <- read.table(paste0(directory, "Global-Precipitation-1900-2017.csv"))
+colnames(temp) <- c("Null", "Year", newheaders[3:14])
+colnames(prec) <- c("Null", "Year", newheaders[3:14])
+
+average.temp <- data.frame(temp[2], Temperature = (temp$Jan + temp$Feb + temp$Mar + temp$Apr + 
+                                                   temp$May + temp$Jun + temp$Jul + temp$Aug + 
+                                                   temp$Sep + temp$Oct + temp$Nov + temp$Dec)/12)
+
+average.prec <- data.frame(prec[2], Precipitati = (prec$Jan + prec$Feb + prec$Mar + prec$Apr + 
+                                                   prec$May + prec$Jun + prec$Jul + prec$Aug + 
+                                                   prec$Sep + prec$Oct + prec$Nov + prec$Dec)/12)
+
+average.arid <- data.frame(prec[2], Aridity = average.prec[2]/(average.temp[2] + 10))
+colnames(average.arid) <- c("Year", "Aridity")
+```
+
+# Research Fundamentals and Methods
+
+\ \ \ \ Basic research fundamentals have been made by using the collected and organized data-sets. The results showed that the globe is warming since 1900 and the warming process was speeding up since 1960s. In addition, the global precipitation and aridity index was constantly decreasing under the context of global warming and they are decreasing under similar trend and with pretty similar slope.
+
+```{r  fig.width=8, fig.height=4, message = FALSE, warning = FALSE, echo=FALSE}
+ggplot(data=average.temp, 
+       aes(x=Year, y=Temperature)) + geom_point(size=2, color='red') +
+       geom_hline(aes(yintercept=mean(Temperature)), 
+                  linetype="dotted", color="red", size=1) +
+       labs(title="Global Mean Temperature from 1900 to 2017", 
+                y="Temperature (Degree Celsius)", 
+                x="Year") +
+       geom_smooth(method=lm)
+
+ggplot(data=average.prec, 
+       aes(x=Year, y=Precipitati)) + geom_point(size=2, color='red') +
+       geom_hline(aes(yintercept=mean(Precipitati)), 
+                  linetype="dotted", color="red", size=1) +
+       labs(title="Global Mean Precipitation from 1900 to 2017", 
+                y="Precipitation (Millimeters)", 
+                x="Year") +
+       geom_smooth(method=lm)
+
+ggplot(data=average.arid, 
+       aes(x=Year, y=Aridity)) + geom_point(size=2, color='red') +
+       geom_hline(aes(yintercept=mean(Aridity)), 
+                  linetype="dotted", color="red", size=1) +
+       labs(title="Global Mean Aridity-Index from 1957 to 2017", 
+                y="Aridity Index (P/PET)", 
+                x="Year") +
+       geom_smooth(method=lm)
+```
+  
+\ \ \ \ The following three graphs are representing the global anomaly in temperature, precipitation and aridity-index, meaning that the globe is warming with decreasing precipitation and a drier environment. And the mean warming temperature has been subtracted from the data-set to hopefully eliminate the effects of global warming. Based on these initial analysis and research fundamentals - I have hypothesized a null hypothesis of that the regional population and regional precipitation are not correlated. And the alternative hypothesis is that the regional population and regional precipitation are significantly related. To conduct the statistical hypothesis tests and find their correlations. I have done the regression and correlation analysis for regression models to find the relationship between the independent and dependent variables, and to check the form, direction and strength of the relationship between the selected variables 
+
+```{r  fig.width=10, fig.height=4, message = FALSE, echo=FALSE}
+ggplot(data     = average.temp, aes(x=Year, 
+           y    = Temperature - mean(Temperature), 
+           fill = Temperature - mean(Temperature) > 0)) +
+       geom_bar(stat = 'identity', alpha=0.8) +
+       labs(title = "Global Temperature Anomaly between 1900 and 2017", 
+                y = "Temperature Difference (Degree Celsius)", 
+                x = "Year") + 
+       scale_fill_manual(values = c("#008EFC","#FC2D00"),
+                         labels = c('FALSE' = '< 0',
+                                    'TRUE'  = '> 0')) +
+       labs(fill = 'Temperature Anomaly') + 
+       theme_classic()
+
+ggplot(data     = average.prec, aes(x=Year, 
+           y    = Precipitati - mean(Precipitati), 
+           fill = Precipitati - mean(Precipitati) > 0)) +
+       geom_bar(stat = 'identity', alpha=0.8) +
+       labs(title = "Global Precipitation Anomaly between 1900 and 2017", 
+                y = "Precipitation Difference (Degree Celsius)", 
+                x = "Year") + 
+       scale_fill_manual(values = c("#008EFC","#FC2D00"),
+                         labels = c('FALSE' = '< 0',
+                                    'TRUE'  = '> 0')) +
+       labs(fill = 'Precipitation Anomaly') + 
+       theme_classic()
+
+ggplot(data     = average.arid, aes(x=Year, 
+           y    = Aridity - mean(Aridity), 
+           fill = Aridity - mean(Aridity) > 0)) +
+       geom_bar(stat = 'identity', alpha=0.8) +
+       labs(title = "Global Aridity-Index Anomaly between 1900 and 2017", 
+                y = "Aridity-Index Difference (Degree Celsius)", 
+                x = "Year") + 
+       scale_fill_manual(values = c("#008EFC","#FC2D00"),
+                         labels = c('FALSE' = '< 0',
+                                    'TRUE'  = '> 0')) +
+       labs(fill = 'Aridity-Index Anomaly') + 
+       theme_classic()
+```
+
+```{r echo=FALSE} 
+counts       <- 0
+select.year  <- 1900:1927
+dataset.temp <- read.table(paste0(directory, airtemp, select.year[1]))
+dataset.prec <- read.table(paste0(directory, precipi, select.year[1]))
+
+coordinates  <- dataset.temp[0:2]
+dataset.temp <- dataset.temp[3:14]
+dataset.prec <- dataset.prec[3:14]
+colnames(coordinates) <- c("Longtitude", "Latitude")
+
+for (year in select.year) {
+  temp <- read.table(paste0(directory, airtemp, year))
+  prec <- read.table(paste0(directory, precipi, year))
+  dataset.temp <- dataset.temp + temp[3:14]
+  dataset.prec <- dataset.prec + prec[3:14]
+  counts       <- counts + 1
+}
+
+temp.first <- data.frame(coordinates, dataset.temp/counts)
+prec.first <- data.frame(coordinates, dataset.prec/counts)
+```
+
+```{r echo=FALSE} 
+counts       <- 0
+select.year  <- 1990:2017
+dataset.temp <- read.table(paste0(directory, airtemp, select.year[1]))
+dataset.prec <- read.table(paste0(directory, precipi, select.year[1]))
+
+coordinates  <- dataset.temp[0:2]
+dataset.temp <- dataset.temp[3:14]
+dataset.prec <- dataset.prec[3:14]
+colnames(coordinates) <- c("Longtitude", "Latitude")
+
+for (year in select.year) {
+  temp <- read.table(paste0(directory, airtemp, year))
+  prec <- read.table(paste0(directory, precipi, year))
+  dataset.temp <- dataset.temp + temp[3:14]
+  dataset.prec <- dataset.prec + prec[3:14]
+  counts       <- counts + 1
+}
+
+temp.second <- data.frame(coordinates, dataset.temp/counts)
+prec.second <- data.frame(coordinates, dataset.prec/counts)
+```
+
+```{r echo=FALSE}
+temp.anomaly <- data.frame(coordinates, temp.second[3:14]-temp.first[3:14])
+prec.anomaly <- data.frame(coordinates, prec.second[3:14]-prec.first[3:14])
+
+colnames(temp.anomaly) <- newheaders 
+colnames(prec.anomaly) <- newheaders 
+
+world.anomaly <- data.frame(coordinates, Temperature = (temp.anomaly$Jan + 
+                                                        temp.anomaly$Feb + 
+                                                        temp.anomaly$Mar + 
+                                                        temp.anomaly$Apr + 
+                                                        temp.anomaly$May + 
+                                                        temp.anomaly$Jun + 
+                                                        temp.anomaly$Jul + 
+                                                        temp.anomaly$Aug + 
+                                                        temp.anomaly$Sep + 
+                                                        temp.anomaly$Oct + 
+                                                        temp.anomaly$Nov + 
+                                                        temp.anomaly$Dec)/12)
+```
+
+```{r echo=FALSE} 
+world.anomaly$Country <- map.where(database="world", 
+                                   world.anomaly$Longtitude, world.anomaly$Latitude)
+brazi.anomaly <- filter(world.anomaly, grepl("Brazil", world.anomaly$Country) == TRUE)
+china.anomaly <- filter(world.anomaly, grepl("China", world.anomaly$Country) == TRUE)
+india.anomaly <- filter(world.anomaly, grepl("India", world.anomaly$Country) == TRUE)
+japan.anomaly <- filter(world.anomaly, grepl("Japan", world.anomaly$Country) == TRUE) 
+usa.anomaly <- filter(world.anomaly, grepl("USA", world.anomaly$Country) == TRUE) 
+```
+
+\ \ \ \ The created maps here show that the warming intensity of different countries. Five countries were chosen here and we can see that there are severe warming correlated to the locations of mega-cities. However, there are also showing severe warming on un-populated areas, such as the Alaska and northeastern China. This is due the fact that northern hemisphere, especially the north pole, is severely effected by global warming and is warming much faster than other areas. But we can still see on the graph that southern western America, where Los Angeles and Phoenix locates are warmer than the surrounding areas. And the Sao Paulo city in Brazil, Tokyo in Japan and Shanghai area (the total Jiangsu Province) in China are warmer and shown brighter on the plotted map.
+
+
+```{r message=FALSE, echo=FALSE}
+pal <- colorNumeric(c("inferno"),
+       domain = china.anomaly$Temperature)
+worldmap <- leaflet(data = china.anomaly) %>% addTiles()
+worldmap %>% addCircleMarkers(~Longtitude, ~Latitude, popup = ~as.character(Temperature), 
+                               label = ~as.character(Temperature), radius=0.1,
+                               color = ~pal(Temperature)) %>% addLegend("bottomright", pal = pal, 
+                                                                         values = ~Temperature, title = "Temp. Anomalies", 
+                                                                         labFormat = labelFormat(prefix = "℃ "), opacity = 2)
+```
+
+```{r message=FALSE, echo=FALSE}
+pal <- colorNumeric(c("inferno"),
+       domain = usa.anomaly$Temperature)
+worldmap <- leaflet(data = usa.anomaly) %>% addTiles()
+worldmap %>% addCircleMarkers(~Longtitude, ~Latitude, popup = ~as.character(Temperature), 
+                               label = ~as.character(Temperature), radius=0.1,
+                               color = ~pal(Temperature)) %>% addLegend("bottomright", pal = pal, 
+                                                                         values = ~Temperature, title = "Temp. Anomalies", 
+                                                                         labFormat = labelFormat(prefix = "℃ "), opacity = 2)
+```
+
+```{r message=FALSE, echo=FALSE}
+pal <- colorNumeric(c("inferno"),
+       domain = india.anomaly$Temperature)
+worldmap <- leaflet(data = india.anomaly) %>% addTiles()
+worldmap %>% addCircleMarkers(~Longtitude, ~Latitude, popup = ~as.character(Temperature), 
+                               label = ~as.character(Temperature), radius=0.1,
+                               color = ~pal(Temperature)) %>% addLegend("bottomright", pal = pal, 
+                                                                         values = ~Temperature, title = "Temp. Anomalies", 
+                                                                         labFormat = labelFormat(prefix = "℃ "), opacity = 2)
+```
+
+```{r message=FALSE, echo=FALSE}
+pal <- colorNumeric(c("inferno"),
+       domain = brazi.anomaly$Temperature)
+worldmap <- leaflet(data = brazi.anomaly) %>% addTiles()
+worldmap %>% addCircleMarkers(~Longtitude, ~Latitude, popup = ~as.character(Temperature), 
+                               label = ~as.character(Temperature), radius=0.1,
+                               color = ~pal(Temperature)) %>% addLegend("bottomright", pal = pal, 
+                                                                         values = ~Temperature, title = "Temp. Anomalies", 
+                                                                         labFormat = labelFormat(prefix = "℃ "), opacity = 2)
+```
+
+```{r message=FALSE, echo=FALSE}
+pal <- colorNumeric(c("inferno"),
+       domain = japan.anomaly$Temperature)
+worldmap <- leaflet(data = japan.anomaly) %>% addTiles()
+worldmap %>% addCircleMarkers(~Longtitude, ~Latitude, popup = ~as.character(Temperature), 
+                               label = ~as.character(Temperature), radius=0.1,
+                               color = ~pal(Temperature)) %>% addLegend("bottomright", pal = pal, 
+                                                                         values = ~Temperature, title = "Temp. Anomalies", 
+                                                                         labFormat = labelFormat(prefix = "℃ "), opacity = 2)
+```
+
+```{r message=FALSE, echo=FALSE}
+for (year in 1950:2017) {
+  # Extracting the data-set of temperature and precipitation
+  temp <- read.table(paste0(directory, airtemp, year)) 
+  prec <- read.table(paste0(directory, precipi, year))
+  la <- filter(worldcities, city == "Los Angeles")
+  sp <- filter(worldcities, city == "Sao Paulo")
+  sh <- filter(worldcities, city == "Shanghai")
+  mb <- filter(worldcities, city == "Mumbai")
+  tk <- filter(worldcities, city == "Tokyo")
+  colnames(temp) <- newheaders  
+  colnames(prec) <- newheaders
+  
+  tempset.la <- filter(temp[1:14], 
+                Longtitude == la$lng&
+                Latitude   == la$lat)
+  precset.la <- filter(prec[1:14], 
+                Longtitude == la$lng&
+                Latitude   == la$lat)
+                # Coordinates of Los Angeles  
+  
+  tempset.sp <- filter(temp[1:14], 
+                Longtitude == sp$lng&
+                Latitude   == sp$lat)
+  precset.sp <- filter(prec[1:14], 
+                Longtitude == sp$lng&
+                Latitude   == sp$lat)
+                # Coordinates of São Paulo
+  
+  tempset.sh <- filter(temp[1:14], 
+                Longtitude == sh$lng&
+                Latitude   == sh$lat) 
+  precset.sh <- filter(prec[1:14], 
+                Longtitude == sh$lng&
+                Latitude   == sh$lat) 
+                # Coordinates of Shanghai
+
+  tempset.mb <- filter(temp[1:14], 
+                Longtitude == mb$lng&
+                Latitude   == mb$lat)
+  precset.mb <- filter(prec[1:14], 
+                Longtitude == mb$lng&
+                Latitude   == mb$lat)
+                # Coordinates of Mumbai
+
+  tempset.tk <- filter(temp[1:14], 
+                Longtitude == tk$lng&
+                Latitude   == tk$lat)
+  precset.tk <- filter(prec[1:14], 
+                Longtitude == tk$lng&
+                Latitude   == tk$lat)
+                # Coordinates of Tokyo
+
+  tempframe.la <- data.frame(Year = c(year), tempset.la[3:14])
+  tempframe.sp <- data.frame(Year = c(year), tempset.sp[3:14])
+  tempframe.sh <- data.frame(Year = c(year), tempset.sh[3:14])
+  tempframe.mb <- data.frame(Year = c(year), tempset.mb[3:14])
+  tempframe.tk <- data.frame(Year = c(year), tempset.tk[3:14])
+  
+  precframe.la <- data.frame(Year = c(year), precset.la[3:14])
+  precframe.sp <- data.frame(Year = c(year), precset.sp[3:14])
+  precframe.sh <- data.frame(Year = c(year), precset.sh[3:14])
+  precframe.mb <- data.frame(Year = c(year), precset.mb[3:14])
+  precframe.tk <- data.frame(Year = c(year), precset.tk[3:14])
+  
+  write.table(tempframe.la, paste0(directory, "1950-2017-Temp-Los Angeles.csv"), 
+              col.names=FALSE, row.names=TRUE, append=TRUE)
+  write.table(tempframe.sp, paste0(directory, "1950-2017-Temp-Sao Paulo.csv"), 
+              col.names=FALSE, row.names=TRUE, append=TRUE)
+  write.table(tempframe.sh, paste0(directory, "1950-2017-Temp-Shanghai.csv"), 
+              col.names=FALSE, row.names=TRUE, append=TRUE)
+  write.table(tempframe.mb, paste0(directory, "1950-2017-Temp-Mumbai.csv"), 
+              col.names=FALSE, row.names=TRUE, append=TRUE)
+  write.table(tempframe.tk, paste0(directory, "1950-2017-Temp-Tokyo.csv"), 
+              col.names=FALSE, row.names=TRUE, append=TRUE)
+  
+  write.table(precframe.la, paste0(directory, "1950-2017-Prec-Los Angeles.csv"), 
+              col.names=FALSE, row.names=TRUE, append=TRUE)
+  write.table(precframe.sp, paste0(directory, "1950-2017-Prec-Sao Paulo.csv"), 
+              col.names=FALSE, row.names=TRUE, append=TRUE)
+  write.table(precframe.sh, paste0(directory, "1950-2017-Prec-Shanghai.csv"), 
+              col.names=FALSE, row.names=TRUE, append=TRUE)
+  write.table(precframe.mb, paste0(directory, "1950-2017-Prec-Mumbai.csv"), 
+              col.names=FALSE, row.names=TRUE, append=TRUE)
+  write.table(precframe.tk, paste0(directory, "1950-2017-Prec-Tokyo.csv"), 
+              col.names=FALSE, row.names=TRUE, append=TRUE)
+}
+```
+
+```{r message=FALSE, echo=FALSE}
+library(latticeExtra)
+cities <- c("Shanghai", "Tokyo", "Los Angeles", "Sao Paulo", "Mumbai")
+```
+
+\ \ \ \ Here are three graph with correlation coefficient results that I created and calculated for 5 chosen mega-cities with large population in different continents. The correlation analysis has been completed here by calculating the correlation coefficients to find the relationship between the independent and dependent variables. All results shows a positive correlation. Now half of my research question has been answered - that is - How population relates to the Urban Heat Island (UHI). And the remaining question here is that, does the environmental variability also influence the urban temperature and whether the variability has stronger impact to the urban heat island than the population growth? By finding the answer I am to use the precipitation data-set and calculate the Pearson's correlation coefficient to find the statistical correlation between precipitation changes and temperature changes under the same scale.
+
+
+```{r message=FALSE, echo=FALSE}
+for (each in cities) { # Looping for five chosen cities
+  popu.city <- read.csv(paste0(directory, "Population-", each, ".csv"), header=TRUE)
+  data.city <- read.table(paste0(directory, "1950-2017-Temp-", each, ".csv"), header=FALSE)
+  colnames(data.city) <- c("Null", "Year", newheaders[3:14]) # Assigning headers
+  year <- c(1950:2017)
+
+  popu.city <-  popu.city$Population/1e6 # Setting unit of population to million
+  temp.city <- (data.city$Jan + data.city$Feb + data.city$Mar + data.city$Apr + 
+                data.city$May + data.city$Jun + data.city$Jul + data.city$Aug + 
+                data.city$Sep + data.city$Oct + data.city$Nov + data.city$Dec)/12
+  
+  data.frame1 <- data.frame(year, temp.city)
+  data.frame2 <- data.frame(year, popu.city)
+  total.data  <- merge(data.frame1, data.frame2)
+  
+  correlation <- cor(x=total.data$popu, 
+                     y=total.data$temp, 
+                     method="pearson")
+  
+  obj1 <- xyplot(popu.city ~ year, 
+          total.data, type = "l" , lwd=2, 
+          col="#0078D4", ylab="Population (Million)")
+
+  obj2 <- xyplot(temp.city ~ year, 
+          total.data, lwd=2, col="#FE5F55", 
+          type=c("p","smooth"), ylab="Temperature (Degree Celsius)")
+  
+  graph <- doubleYScale(obj1, obj2, add.ylab2=TRUE, use.style=FALSE, 
+           text=c("Growth of Population", "Growth of Temperature"),
+           title=paste0("Population Growth vs. Temperature Growth in ", 
+                        each, " from 1950 to 2017", "\nCorrelation Coefficient: ", 
+                        correlation), cex=0.75)
+  print(graph)
+}
+```
+
+\ \ \ \ As Manoli et al. discussed the relationship between urban and suburban surface temperature, population, structure and climate, and how they would affect the trend of Urban Heat Island. The paper analyzes the difference of surface temperature in urban and sub-urban areas over the summer and found that the temperature increases non-linearly with precipitation and obviously scales with the size of urban area. The study meets with the graph created based on my data-set and inspired me of using the precipitation data-sets from 1900-2017 (which comes with the surface temperature data-sets under the same time-scale) together. Thus the graphs of showing the trends of precipitation and temperature through the decades were created based on the idea above. The five mega-cities all showed that the regional precipitation doesn't show strong or obvious increasing or decreasing with temperature. And the correlation coefficients of representing the relationship between precipitation change and temperature change has been calculated and results showed that the coefficients are not as strong as the relationship of regional population growth to the regional temperature growth. The results mean that the population growth has a stronger impact on the local severity of urban heating, the UHI.
+
+```{r message=FALSE, echo=FALSE}
+for (each in cities) { # Looping for five chosen cities
+  x.city <- read.table(paste0(directory, "1950-2017-Prec-", each, ".csv"), header=FALSE)
+  y.city <- read.table(paste0(directory, "1950-2017-Temp-", each, ".csv"), header=FALSE)
+  colnames(x.city) <- c("Null", "Year", newheaders[3:14])
+  colnames(y.city) <- c("Null", "Year", newheaders[3:14])
+  year <- c(1950:2017)
+  
+  prec.city <- (x.city$Jan + x.city$Feb + x.city$Mar + x.city$Apr + 
+                x.city$May + x.city$Jun + x.city$Jul + x.city$Aug + 
+                x.city$Sep + x.city$Oct + x.city$Nov + x.city$Dec)/12
+  
+  temp.city <- (y.city$Jan + y.city$Feb + y.city$Mar + y.city$Apr + 
+                y.city$May + y.city$Jun + y.city$Jul + y.city$Aug + 
+                y.city$Sep + y.city$Oct + y.city$Nov + y.city$Dec)/12
+
+  data.frame1 <- data.frame(year, prec.city)
+  data.frame2 <- data.frame(year, temp.city)
+  total.data  <- merge(data.frame1, data.frame2)
+  
+  correlation <- cor(x=total.data$prec.city, 
+                     y=total.data$temp.city,
+                     method="pearson")
+              
+  obj1 <- xyplot(prec.city ~ year, 
+          total.data, lwd=2, col="#0078D4", 
+          type=c("p","smooth"), ylab="Precipitation (Millimeters)")
+
+  obj2 <- xyplot(temp.city ~ year, 
+          total.data, lwd=2, col="#FE5F55", 
+          type=c("p","smooth"), ylab="Temperature (Degree Celsius)")
+  
+  graph <- doubleYScale(obj1, obj2, add.ylab2=TRUE, use.style=FALSE, 
+           text=c("Trend of Precipitation", "Trend of Temperature"),
+           title=paste0("Precipitation Trend vs. Temperature Trend in ", 
+                        each, " from 1950 to 2017", "\nCorrelation Coefficient: ", 
+                        correlation), cex=0.75)
+  print(graph)
+}
+```
+
+# Conclusion
+  
+\ \ \ \ I hope that the research can provide useful information and outlooks to help local governments and international organizations to formulate policies to contain the UHI Surging, and help on planning for urban greening, reservoir development, construction and other applications in the future. I think this research is meaningful. As the population increases, the number of buildings and roads increases, the urban area continues to expand, and the population increases significantly, which significantly increases the temperature in the urban area. Studying the relationship between population growth and rising temperature can help local governments and international organizations formulate effective policies and regulations to slow down the serious heat island effect nowadays and in the future.
+
+
+# Citations
+
+Jürgen, J. G. (2006). CLIMPAG: Climate Impact on Agriculture | DATA and MAPS | Koeppen-Climatology data. Climpag. http://www.fao.org/nr/climpag/globgrids/KC_commondata_en.asp
+
+Jacobson, M. Z., & ten Hoeve, J. E. (2012). Effects of Urban Surfaces and White Roofs on Global and Regional Climate. Journal of Climate, 25(3), 1028–1044. https://doi.org/10.1175/jcli-d-11-00032.1
+Peng, B., & Shi, Y. (2013). The impacting mechanism and laws of function of urban heat islands effect: A case study of Shanghai. Acta Geographica Sinica, Vol. 68(11), 1461-1471. https://doi.org/10.11821/dlxb201311002
+
+Li, W., Bai, Y., Chen, Q., He, K., Ji, X., & Han, C. (2014). Discrepant impacts of land use and land cover on urban heat islands: A case study of Shanghai, China. Ecological Indicators, 47, 171–178. https://doi.org/10.1016/j.ecolind.2014.08.015
+
+Zhou, B. (2017). The role of city size and urban form in the. . . Scientific Reports. https://www.nature.com/articles/s41598-017-04242-2)?error=cookies_not_supported&code=08f3c8d3-8439-4cca-9ee8-c257f0757432
+
+Manoli, G., Fatichi, S., Schläpfer, M., Yu, K., Crowther, T. W., Meili, N., Burlando, P., Katul, G. G., & Bou-Zeid, E. (2019). Magnitude of urban heat islands largely explained by climate and population. Nature, 573(7772), 55–60. https://doi.org/10.1038/s41586-019-1512-9
+  
